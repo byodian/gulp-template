@@ -5,12 +5,17 @@ const settings = {
   styles: true,
   svgs: true,
   copy: true,
-  reload: true
+  reload: true,
+  ftls: true
 }
 
 const paths = {
-  input: ['src/','public/'],
+  input: ['src/**/*','public/'],
   output: 'dist/',
+  ftls: {
+    input: 'src/ftls/mock/**/*.json',
+    output: 'dist/modules'
+  },
   scripts: {
     input: 'src/js/**/*.js',
     output: 'dist/js'
@@ -33,12 +38,14 @@ const paths = {
 /**
  * Gulp Packages
  */
+// HTMl
+const freemarker = require("gulp-freemarker");
 
 // General
 const { src, dest, watch, series, parallel } = require('gulp');
 const del = require('del');
 const rename = require('gulp-rename');
-
+const path = require('path');
 // Scripts
 const terser = require('gulp-terser');
 const mode = require('gulp-mode')();
@@ -70,6 +77,18 @@ const clean = function(cb) {
   return cb();
 }
 
+const buildFtls = function(cb) {
+  if (!settings.ftls) return cb()
+
+  return src(paths.ftls.input)
+    .pipe(freemarker({
+      // eslint-disable-next-line no-undef
+      viewRoot: path.resolve(__dirname, 'src/ftls/src'),
+      options: {}
+    }))
+    .pipe(dest(paths.ftls.output))
+}
+
 const buildScripts = function(cb) {
   if(!settings.scripts) return cb();
 
@@ -89,7 +108,6 @@ const buildScripts = function(cb) {
     .pipe(mode.development( sourcemaps.write() ))
     .pipe(dest(paths.scripts.output))
 }
-
 
 const buildStyles = function(cb) {
   if (!settings.styles) return cb();
@@ -153,6 +171,7 @@ exports.default = series(
   clean,
   parallel(
     buildScripts,
+    buildFtls,
     buildStyles,
     buildImages,
     copyFiles

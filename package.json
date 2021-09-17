@@ -22,6 +22,7 @@
     "gulp-autoprefixer": "^7.0.1",
     "gulp-babel": "^8.0.0",
     "gulp-csso": "^4.0.1",
+    "gulp-freemarker": "^0.1.5",
     "gulp-mode": "^1.0.2",
     "gulp-rename": "^2.0.0",
     "gulp-sass": "^4.1.0",
@@ -32,5 +33,8 @@
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0",
     "webpack-stream": "^6.1.0"
+  },
+  "dependencies": {
+    "freemarker.js": "^1.4.0"
   }
 }
